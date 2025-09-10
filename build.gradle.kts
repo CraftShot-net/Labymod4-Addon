@@ -5,11 +5,11 @@ plugins {
 
 val versions = providers.gradleProperty("net.labymod.minecraft-versions").get().split(";")
 
-group = "org.example"
-version = providers.environmentVariable("VERSION").getOrElse("1.0.0")
+group = "me.timeox2k"
+version = providers.environmentVariable("VERSION").getOrElse("1.0.1")
 
 labyMod {
-    defaultPackageName = "org.example" //change this to your main package name (used by all modules)
+    defaultPackageName = "me.timeox2k"
 
     minecraft {
         registerVersion(versions.toTypedArray()) {
@@ -23,10 +23,10 @@ labyMod {
     }
 
     addonInfo {
-        namespace = "example"
-        displayName = "ExampleAddon"
-        author = "Example Author"
-        description = "Example Description"
+        namespace = "craftshot"
+        displayName = "CraftShot"
+        author = "Timeox2k"
+        description = "CraftShot - The Social Network for your Screenshots. Just Screenshot to upload it to CraftShot."
         minecraftVersion = "*"
         version = rootProject.version.toString()
     }

@@ -1,0 +1,26 @@
+{
+  "craftshot": {
+    "settings": {
+      "enabled": {
+        "name": "Enabled"
+      },"openBrowserOnSuccess": {
+        "name": "Open Image in Browser after Successful Upload"
+      }
+    },
+    "screenshot": {
+      "prefix": "[CraftShot] ",
+      "message": "We saw you made a screenshot - do you want to post it? Click ",
+      "clickHere": "[HERE]",
+      "hoverText": "Click here to upload the screenshot"
+    },
+    "upload": {
+      "prefix": "[CraftShot] ",
+      "success": "Screenshot uploaded successfully! ",
+      "copyUrl": "[COPY URL]",
+      "error": "Upload failed: %s",
+      "uploading": "Uploading screenshot...",
+      "hoverCopyUrl": "Click here to copy URL to clipboard",
+      "urlCopied": "URL copied to clipboard!"
+    }
+  }
+}

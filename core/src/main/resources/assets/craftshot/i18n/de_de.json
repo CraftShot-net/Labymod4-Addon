@@ -1,0 +1,26 @@
+{
+  "craftshot": {
+    "settings": {
+      "enabled": {
+        "name": "Aktiviert"
+      },"openBrowserOnSuccess": {
+        "name": "Öffne Bild im Browser nach erfolgreichem Upload"
+      }
+    },
+    "screenshot": {
+      "prefix": "[CraftShot] ",
+      "message": "Wir haben gesehen du hast ein Screenshot gemacht - willst du das posten? Klicke ",
+      "clickHere": "[HIER]",
+      "hoverText": "Klicke hier um den Screenshot zu uploaden"
+    },
+    "upload": {
+      "prefix": "[CraftShot] ",
+      "success": "Screenshot erfolgreich hochgeladen! ",
+      "copyUrl": "[URL KOPIEREN]",
+      "error": "Upload fehlgeschlagen: %s",
+      "uploading": "Lade Screenshot hoch...",
+      "hoverCopyUrl": "Klicke hier um die URL zu kopieren",
+      "urlCopied": "URL in die Zwischenablage kopiert!"
+    }
+  }
+}
