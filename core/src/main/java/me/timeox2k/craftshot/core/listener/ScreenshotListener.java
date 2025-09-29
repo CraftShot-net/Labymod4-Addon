@@ -1,21 +1,20 @@
-package me.timeox2k.core.listener;
+package me.timeox2k.craftshot.core.listener;
 
+import me.timeox2k.craftshot.core.CraftShotAddon;
 import net.labymod.api.Laby;
-import net.labymod.api.client.Minecraft;
 import net.labymod.api.client.chat.ChatExecutor;
 import net.labymod.api.client.component.Component;
 import net.labymod.api.client.component.event.ClickEvent;
 import net.labymod.api.client.component.event.HoverEvent;
 import net.labymod.api.client.component.format.NamedTextColor;
 import net.labymod.api.event.Subscribe;
-import me.timeox2k.core.CraftShot;
 import net.labymod.api.event.client.misc.CaptureScreenshotEvent;
 
 public class ScreenshotListener {
 
-  private final CraftShot addon;
+  private final CraftShotAddon addon;
 
-  public ScreenshotListener(CraftShot addon) {
+  public ScreenshotListener(CraftShotAddon addon) {
     this.addon = addon;
   }
 

@@ -1,20 +1,25 @@
-package me.timeox2k.core.utils;
+package me.timeox2k.craftshot.core.utils;
 
-import me.timeox2k.core.CraftShot;
-import net.labymod.api.Laby;
-
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import me.timeox2k.craftshot.core.CraftShotAddon;
+import net.labymod.api.Laby;
 
 public class UploadManager {
 
   private static final String API_URL = "https://craftshot.net/v1/upload";
-  private final CraftShot addon;
+  private final CraftShotAddon addon;
 
-  public UploadManager(CraftShot addon) {
+  public UploadManager(CraftShotAddon addon) {
     this.addon = addon;
   }
 
@@ -30,22 +35,22 @@ public class UploadManager {
       try (OutputStream out = connection.getOutputStream(); PrintWriter writer = new PrintWriter(
           new OutputStreamWriter(out, StandardCharsets.UTF_8), true)) {
 
-        addFormField(writer, boundary, "access_token", accessToken);
+        this.addFormField(writer, boundary, "access_token", accessToken);
         try {
           var serverData = Laby.labyAPI().serverController().getCurrentServerData();
           if (serverData != null && serverData.address() != null
               && serverData.address().getHost() != null) {
             String serverIp = serverData.address().getHost();
             if (!serverIp.isEmpty()) {
-              addFormField(writer, boundary, "server_ip", serverIp);
+              this.addFormField(writer, boundary, "server_ip", serverIp);
             }
           }
         } catch (Exception e) {
-          addon.logger().debug("Server IP not available: " + e.getMessage());
+          this.addon.logger().debug("Server IP not available: " + e.getMessage());
         }
 
         // Add file
-        addFileField(writer, out, boundary, screenshotFile);
+        this.addFileField(writer, out, boundary, screenshotFile);
 
         // End
         writer.append("--").append(boundary).append("--").append("\r\n");
@@ -53,16 +58,16 @@ public class UploadManager {
       }
 
       int responseCode = connection.getResponseCode();
-      String responseBody = readResponse(connection);
+      String responseBody = this.readResponse(connection);
 
       if (responseCode == 200) {
-        return parseSuccessResponse(responseBody);
+        return this.parseSuccessResponse(responseBody);
       } else {
         return new UploadResult(false, "HTTP " + responseCode, null);
       }
 
     } catch (Exception e) {
-      addon.logger().error("Upload error: " + e.getMessage());
+      this.addon.logger().error("Upload error: " + e.getMessage());
       return new UploadResult(false, e.getMessage(), null);
     }
   }
@@ -83,8 +88,8 @@ public class UploadManager {
   private UploadResult parseSuccessResponse(String responseBody) {
     try {
       // Simple JSON parsing for the expected response
-      String message = extractJsonValue(responseBody, "message");
-      String url = extractNestedJsonValue(responseBody, "data", "url");
+      String message = this.extractJsonValue(responseBody, "message");
+      String url = this.extractNestedJsonValue(responseBody, "data", "url");
 
       return new UploadResult(true, message, url);
     } catch (Exception e) {
@@ -141,13 +146,13 @@ public class UploadManager {
         return "";
       }
 
-      int closeBrace = findMatchingBrace(json, openBrace);
+      int closeBrace = this.findMatchingBrace(json, openBrace);
       if (closeBrace == -1) {
         return "";
       }
 
       String dataSection = json.substring(openBrace, closeBrace + 1);
-      return extractJsonValue(dataSection, childKey);
+      return this.extractJsonValue(dataSection, childKey);
     } catch (Exception e) {
       return "";
     }
@@ -192,28 +197,7 @@ public class UploadManager {
     writer.append("\r\n");
   }
 
-  public static class UploadResult {
+  public record UploadResult(boolean success, String message, String url) {
 
-    private final boolean success;
-    private final String message;
-    private final String url;
-
-    public UploadResult(boolean success, String message, String url) {
-      this.success = success;
-      this.message = message;
-      this.url = url;
-    }
-
-    public boolean isSuccess() {
-      return success;
-    }
-
-    public String getMessage() {
-      return message;
-    }
-
-    public String getUrl() {
-      return url;
-    }
   }
 }

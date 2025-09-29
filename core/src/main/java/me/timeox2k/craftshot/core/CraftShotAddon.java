@@ -1,21 +1,19 @@
-package me.timeox2k.core;
+package me.timeox2k.craftshot.core;
 
-import me.timeox2k.core.commands.craftshot_command;
+import me.timeox2k.craftshot.core.commands.CraftshotCommand;
+import me.timeox2k.craftshot.core.listener.ScreenshotListener;
 import net.labymod.api.addon.LabyAddon;
 import net.labymod.api.models.addon.annotation.AddonMain;
-import me.timeox2k.core.listener.ScreenshotListener;
 
 @AddonMain
-public class CraftShot extends LabyAddon<CraftShotConfiguration> {
+public class CraftShotAddon extends LabyAddon<CraftShotConfiguration> {
 
   @Override
   protected void enable() {
     this.registerSettingCategory();
 
     this.registerListener(new ScreenshotListener(this));
-    this.registerCommand(new craftshot_command(this));
-
-    this.logger().info("Enabled the Addon");
+    this.registerCommand(new CraftshotCommand(this));
   }
 
   @Override
