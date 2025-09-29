@@ -9,18 +9,7 @@ group = "me.timeox2k"
 version = providers.environmentVariable("VERSION").getOrElse("1.0.1")
 
 labyMod {
-    defaultPackageName = "me.timeox2k"
-
-    minecraft {
-        registerVersion(versions.toTypedArray()) {
-            runs {
-                getByName("client") {
-                    // When the property is set to true, you can log in with a Minecraft account
-                    // devLogin = true
-                }
-            }
-        }
-    }
+    defaultPackageName = "me.timeox2k.craftshot"
 
     addonInfo {
         namespace = "craftshot"
@@ -29,6 +18,16 @@ labyMod {
         description = "CraftShot - The Social Network for your Screenshots. Just Screenshot to upload it to CraftShot."
         minecraftVersion = "*"
         version = rootProject.version.toString()
+    }
+
+    minecraft {
+        registerVersion(versions.toTypedArray()) {
+            runs {
+                getByName("client") {
+                    devLogin = true
+                }
+            }
+        }
     }
 }
 

@@ -3,22 +3,24 @@
     "settings": {
       "enabled": {
         "name": "Enabled"
-      },"openBrowserOnSuccess": {
+      },
+      "openBrowserOnSuccess": {
         "name": "Open Image in Browser after Successful Upload"
       }
     },
     "screenshot": {
-      "prefix": "[CraftShot] ",
-      "message": "We saw you made a screenshot - do you want to post it? Click ",
-      "clickHere": "[HERE]",
+      "message": "We saw you made a screenshot - do you want to post it? %s to upload!",
+      "clickHere": "Click here",
       "hoverText": "Click here to upload the screenshot"
     },
-    "upload": {
-      "prefix": "[CraftShot] ",
-      "success": "Screenshot uploaded successfully! ",
-      "copyUrl": "[COPY URL]",
-      "error": "Upload failed: %s",
+    "command": {
+      "missingArgument": "This command should not be run manually!",
+      "invalidFile": "The file does not exist!",
+      "invalidSession": "You need to be logged into a valid Minecraft account!",
       "uploading": "Uploading screenshot...",
+      "failed": "An error occurred! Check the log for more info.",
+      "success": "Screenshot uploaded successfully!",
+      "copyUrl": "[COPY URL]",
       "hoverCopyUrl": "Click here to copy URL to clipboard",
       "urlCopied": "URL copied to clipboard!"
     }
