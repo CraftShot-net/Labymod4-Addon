@@ -16,7 +16,7 @@
     "command": {
       "missingArgument": "Dieser Command sollte nicht manuell ausgeführt werden!",
       "invalidFile": "Die Datei existiert nicht!",
-      "invalidSession": "Du musst in einen gültigen Minecraft Account eingeloggt sein!",
+      "invalidSession": "Du musst in den LabyMod Chat eingeloggt sein!",
       "uploading": "Lade Screenshot hoch...",
       "failed": "Ein Fehler ist aufgetreten! Schau in den Log für mehr Infos.",
       "success": "Screenshot erfolgreich hochgeladen! ",
