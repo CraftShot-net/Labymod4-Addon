@@ -26,9 +26,6 @@ public class AddonAPIProfileStatsManager {
       public void onSuccess(JsonObject response) {
        followerCount = response.get("follower_count").getAsInt();
        unreadNotificationCount = response.get("unread_notifications_count").getAsInt();
-
-       System.out.println("API-FollowerCount: " + followerCount);
-       System.out.println("API-UnreadNotificationCount: " + unreadNotificationCount);
       }
 
       @Override
