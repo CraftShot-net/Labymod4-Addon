@@ -15,9 +15,6 @@ import net.labymod.api.client.component.event.ClickEvent;
 import net.labymod.api.client.component.event.HoverEvent;
 import net.labymod.api.client.component.format.NamedTextColor;
 import net.labymod.api.client.network.server.ServerData;
-import net.labymod.api.labyconnect.LabyConnectSession;
-import net.labymod.api.labyconnect.TokenStorage.Purpose;
-import net.labymod.api.labyconnect.TokenStorage.Token;
 import net.labymod.api.util.io.web.request.FormData;
 import net.labymod.api.util.io.web.request.Request;
 import net.labymod.api.util.io.web.request.Request.Method;
@@ -51,7 +48,8 @@ public class CraftshotCommand extends Command {
       return true;
     }
 
-    String labyConnectToken = this.getLabyConnectToken();
+
+    String labyConnectToken = addon.getLabyConnectToken();
     if (labyConnectToken == null) {
       this.displayMessage(Component.empty().append(CraftShotAddon.prefix()).append(
           Component.translatable(this.getTranslationKey("invalidSession"), NamedTextColor.RED)));
@@ -123,22 +121,7 @@ public class CraftshotCommand extends Command {
     return true;
   }
 
-  @Nullable
-  private String getLabyConnectToken() {
-    //Credits to RappyTV for providing this code snippet to me
-    LabyConnectSession session = Laby.labyAPI().labyConnect().getSession();
-    if (session == null) {
-      return null;
-    }
 
-    Token token = session.tokenStorage().getToken(Purpose.JWT, session.self().getUniqueId());
-
-    if (token == null || token.isExpired()) {
-      return null;
-    }
-
-    return token.getToken();
-  }
 
   @Nullable
   private String getHost() {

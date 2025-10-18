@@ -1,5 +1,23 @@
 {
+  "labymod": {
+    "hudWidgetCategory": {
+      "craftshot": {
+        "name": "Craftshot",
+        "description": "Zeigt die Anzahl der Follower deines Craftshot-Accounts an."
+      }
+    }
+  },
   "craftshot": {
+    "hudWidget": {
+      "followerCountWidget": {
+        "name": "Follower Count",
+        "ingameDisplay": "CraftShot Follower"
+      },
+      "unreadNotificationCountWidget": {
+        "name": "Unread Notifications",
+        "ingameDisplay": "Unread Notifications"
+      }
+    },
     "settings": {
       "enabled": {
         "name": "Enabled"
