@@ -24,15 +24,15 @@ public class AddonAPIProfileStatsManager {
     Task.builder(() -> this.getCraftShotAddonAPIStats(new ResponseCallBack() {
       @Override
       public void onSuccess(JsonObject response) {
-       followerCount = response.get("follower_count").getAsInt();
-       unreadNotificationCount = response.get("unread_notifications_count").getAsInt();
+        followerCount = response.get("follower_count").getAsInt();
+        unreadNotificationCount = response.get("unread_notifications_count").getAsInt();
       }
 
       @Override
-      public void onFailure(int errorCode) {
-        System.out.println("API-Error: " + errorCode);
+      public void onFailure(int errorCode, String responseBody) {
+        System.out.println("API-Error: " + errorCode + " - " + responseBody);
       }
-    })).repeat(30, TimeUnit.SECONDS).build().execute();
+    })).repeat(10, TimeUnit.SECONDS).build().execute();
   }
 
   public int getFollowerCount() {
@@ -44,14 +44,14 @@ public class AddonAPIProfileStatsManager {
   }
 
   private void getCraftShotAddonAPIStats(ResponseCallBack callback) {
-
     if (addon.getLabyConnectToken() == null) {
-      callback.onFailure(-1);
+      callback.onFailure(-1, "No LabyConnect Token found!");
       return;
     }
 
     try {
-      String apiUrl = "https://craftshot.net/api/v1/get-labymod-addon-stats/" + addon.getLabyConnectToken();
+      String apiUrl =
+          "https://craftshot.net/api/v1/get-labymod-addon-stats/" + addon.getLabyConnectToken();
       URL url = new URL(apiUrl);
       HttpURLConnection connection = (HttpURLConnection) url.openConnection();
 
@@ -72,11 +72,23 @@ public class AddonAPIProfileStatsManager {
         JsonObject jsonResponse = JsonParser.parseString(response.toString()).getAsJsonObject();
         callback.onSuccess(jsonResponse);
       } else {
-        callback.onFailure(responseCode);
+        // Read error response body
+        BufferedReader errorReader = new BufferedReader(
+            new InputStreamReader(connection.getErrorStream()));
+        StringBuilder errorResponse = new StringBuilder();
+        String errorLine;
+
+        while ((errorLine = errorReader.readLine()) != null) {
+          errorResponse.append(errorLine);
+        }
+        errorReader.close();
+
+        callback.onFailure(responseCode, errorResponse.toString());
       }
     } catch (Exception e) {
       e.printStackTrace();
-      callback.onFailure(-1);
+      callback.onFailure(-1, e.getMessage());
     }
   }
+
 }
