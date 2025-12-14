@@ -5,6 +5,6 @@ import com.google.gson.JsonObject;
 public interface ResponseCallBack {
 
   void onSuccess(JsonObject response);
-  void onFailure(int errorCode);
 
+  void onFailure(int responseCode, String responseBody);
 }
