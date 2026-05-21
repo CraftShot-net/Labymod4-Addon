@@ -50,8 +50,9 @@ public class AddonAPIProfileStatsManager {
     }
 
     try {
+      String customDomain = addon.configuration().getDomain().get();
       String apiUrl =
-          "https://craftshot.net/api/v1/get-labymod-addon-stats/" + addon.getLabyConnectToken();
+          "https://" + customDomain + "/api/v1/get-labymod-addon-stats/" + addon.getLabyConnectToken();
       URL url = new URL(apiUrl);
       HttpURLConnection connection = (HttpURLConnection) url.openConnection();
 

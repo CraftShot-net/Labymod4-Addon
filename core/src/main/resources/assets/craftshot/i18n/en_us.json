@@ -23,7 +23,10 @@
         "name": "Enabled"
       },
       "openBrowserOnSuccess": {
-        "name": "Open Image in Browser after Successful Upload"
+        "name": "Open image in browser after successful upload"
+      },
+      "domain": {
+        "name": "Custom Domain (only set if you know what you are doing!)"
       }
     },
     "screenshot": {

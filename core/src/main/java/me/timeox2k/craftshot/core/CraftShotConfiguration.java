@@ -2,6 +2,7 @@ package me.timeox2k.craftshot.core;
 
 import net.labymod.api.addon.AddonConfig;
 import net.labymod.api.client.gui.screen.widget.widgets.input.SwitchWidget.SwitchSetting;
+import net.labymod.api.client.gui.screen.widget.widgets.input.TextFieldWidget.TextFieldSetting;
 import net.labymod.api.configuration.loader.annotation.ConfigName;
 import net.labymod.api.configuration.loader.property.ConfigProperty;
 
@@ -14,6 +15,15 @@ public class CraftShotConfiguration extends AddonConfig {
   @SwitchSetting
   private final ConfigProperty<Boolean> openBrowserOnSuccess = new ConfigProperty<>(true);
 
+  @SwitchSetting
+  private final ConfigProperty<Boolean> useDevelopmentEnvironment = new ConfigProperty<>(true);
+
+  @TextFieldSetting
+  private final ConfigProperty<String> hostPoint = new ConfigProperty<>("api.craftshot.net");
+
+  @TextFieldSetting
+  private final ConfigProperty<String> domain = new ConfigProperty<>("craftshot.net");
+
   @Override
   public ConfigProperty<Boolean> enabled() {
     return this.enabled;
@@ -21,5 +31,10 @@ public class CraftShotConfiguration extends AddonConfig {
 
   public ConfigProperty<Boolean> openBrowserOnSuccess() {
     return this.openBrowserOnSuccess;
+  }
+
+  // Getter für die Domain
+  public ConfigProperty<String> getDomain() {
+    return this.domain;
   }
 }

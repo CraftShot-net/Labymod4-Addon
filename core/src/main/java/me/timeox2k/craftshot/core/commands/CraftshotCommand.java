@@ -22,7 +22,7 @@ import org.jetbrains.annotations.Nullable;
 
 public class CraftshotCommand extends Command {
 
-  private static final String API_URL = "https://craftshot.net/v1/upload";
+  private static String API_URL;
   private final CraftShotAddon addon;
 
   public CraftshotCommand(CraftShotAddon addon) {
@@ -31,6 +31,8 @@ public class CraftshotCommand extends Command {
 
     this.translationKey("craftshot.command");
     this.withSubCommand(new CopySubcommand());
+
+    API_URL = "https://" + addon.configuration().getDomain().get() + "/v1/upload";
   }
 
   @Override

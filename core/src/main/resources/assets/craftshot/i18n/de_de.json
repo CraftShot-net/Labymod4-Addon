@@ -24,6 +24,9 @@
       },
       "openBrowserOnSuccess": {
         "name": "Öffne Bild im Browser nach erfolgreichem Upload"
+      },
+      "domain": {
+        "name": "Eigene Domain (nur setzen wenn du weißt was du tust!)"
       }
     },
     "screenshot": {
