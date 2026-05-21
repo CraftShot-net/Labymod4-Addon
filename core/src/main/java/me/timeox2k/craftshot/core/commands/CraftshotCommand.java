@@ -22,7 +22,6 @@ import org.jetbrains.annotations.Nullable;
 
 public class CraftshotCommand extends Command {
 
-  private static String API_URL;
   private final CraftShotAddon addon;
 
   public CraftshotCommand(CraftShotAddon addon) {
@@ -31,8 +30,6 @@ public class CraftshotCommand extends Command {
 
     this.translationKey("craftshot.command");
     this.withSubCommand(new CopySubcommand());
-
-    API_URL = "https://" + addon.configuration().getDomain().get() + "/v1/upload";
   }
 
   @Override
@@ -80,7 +77,9 @@ public class CraftshotCommand extends Command {
       return true;
     }
 
-    Request.ofGson(JsonElement.class).url(API_URL).method(Method.POST).form(formData)
+    Request.ofGson(JsonElement.class)
+        .url("https://" + this.addon.configuration().getDomain().get() + "/v1/upload")
+        .method(Method.POST).form(formData)
         .handleErrorStream().async().execute((response) -> {
           if (response.hasException()) {
             this.displayMessage(Component.empty().append(CraftShotAddon.prefix())
@@ -112,7 +111,9 @@ public class CraftshotCommand extends Command {
                         .clickEvent(ClickEvent.runCommand("/craftshot copy " + url))));
 
             if (this.addon.configuration().openBrowserOnSuccess().get()) {
-              Laby.references().chatExecutor().openUrl(url + "?auth=" + labyConnectToken);
+              String domain = this.addon.configuration().getDomain().get();
+              String path = url.replaceFirst("https?://[^/]+", "");
+              Laby.references().chatExecutor().openUrl("https://" + domain + path + "?auth=" + labyConnectToken);
             }
           } catch (Exception e) {
             this.displayMessage(Component.empty().append(CraftShotAddon.prefix())
