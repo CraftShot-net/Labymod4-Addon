@@ -15,12 +15,6 @@ public class CraftShotConfiguration extends AddonConfig {
   @SwitchSetting
   private final ConfigProperty<Boolean> openBrowserOnSuccess = new ConfigProperty<>(true);
 
-  @SwitchSetting
-  private final ConfigProperty<Boolean> useDevelopmentEnvironment = new ConfigProperty<>(true);
-
-  @TextFieldSetting
-  private final ConfigProperty<String> hostPoint = new ConfigProperty<>("api.craftshot.net");
-
   @TextFieldSetting
   private final ConfigProperty<String> domain = new ConfigProperty<>("craftshot.net");
 
