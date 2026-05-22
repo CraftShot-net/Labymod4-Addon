@@ -4,6 +4,7 @@ import me.timeox2k.craftshot.core.commands.CraftshotCommand;
 import me.timeox2k.craftshot.core.hud.widgets.FollowerCountHudWidget;
 import me.timeox2k.craftshot.core.hud.widgets.UnreadNotificationCountHudWidget;
 import me.timeox2k.craftshot.core.listener.ScreenshotListener;
+import me.timeox2k.craftshot.core.listener.SocialEventsListener;
 import me.timeox2k.craftshot.core.manager.AddonAPIProfileStatsManager;
 import me.timeox2k.craftshot.core.utils.SSLCertManager;
 import net.labymod.api.Laby;
@@ -31,6 +32,7 @@ public class CraftShotAddon extends LabyAddon<CraftShotConfiguration> {
     this.registerSettingCategory();
 
     this.registerListener(new ScreenshotListener());
+    this.registerListener(new SocialEventsListener(this));
     this.registerCommand(new CraftshotCommand(this));
 
     this.profileStatsManager = new AddonAPIProfileStatsManager(this);
@@ -41,6 +43,8 @@ public class CraftShotAddon extends LabyAddon<CraftShotConfiguration> {
 
     labyAPI().hudWidgetRegistry().register(new FollowerCountHudWidget(this));
     labyAPI().hudWidgetRegistry().register(new UnreadNotificationCountHudWidget(this));
+
+    SSLCertManager.disableSSLCertificateValidation();
 
   }
 
