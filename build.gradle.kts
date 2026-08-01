@@ -24,7 +24,7 @@ labyMod {
         registerVersion(versions.toTypedArray()) {
             runs {
                 getByName("client") {
-                    devLogin = true
+                   // devLogin = true
                 }
             }
         }
