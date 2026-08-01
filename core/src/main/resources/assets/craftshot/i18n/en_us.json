@@ -43,7 +43,17 @@
       "success": "Screenshot uploaded successfully!",
       "copyUrl": "[COPY URL]",
       "hoverCopyUrl": "Click here to copy URL to clipboard",
-      "urlCopied": "URL copied to clipboard!"
+      "urlCopied": "URL copied to clipboard!",
+      "reply": {
+        "missingArgument": "Usage: /craftshot reply <Name> <message>",
+        "invalidId": "Invalid conversation ID.",
+        "noConversation": "No active conversation with this player.",
+        "success": "Message sent successfully!",
+        "failed": "Failed to send message"
+      }
+    },
+    "chat": {
+      "hoverReply": "Click to reply"
     }
   }
 }

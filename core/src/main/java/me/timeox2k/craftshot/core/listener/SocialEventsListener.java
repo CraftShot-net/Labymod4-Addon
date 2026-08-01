@@ -8,6 +8,7 @@ import net.labymod.api.event.client.lifecycle.ShutdownEvent;
 import net.labymod.api.event.client.network.server.ServerDisconnectEvent;
 import net.labymod.api.event.client.network.server.ServerJoinEvent;
 import net.labymod.api.event.client.network.server.ServerSwitchEvent;
+import net.labymod.api.event.client.session.SessionUpdateEvent;
 import net.labymod.api.util.concurrent.task.Task;
 
 import java.io.BufferedReader;
@@ -33,6 +34,11 @@ public class SocialEventsListener {
         sendApiRequest("/v1/server/heartbeat", currentServerIp);
       }
     }).repeat(15, TimeUnit.SECONDS).build().execute();
+  }
+
+  @Subscribe
+  public void onSessionUpdateEvent(SessionUpdateEvent event) {
+    CraftShotAddon.handleAccountSwitch();
   }
 
   @Subscribe

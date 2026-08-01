@@ -43,7 +43,17 @@
       "success": "Screenshot erfolgreich hochgeladen! ",
       "copyUrl": "[URL KOPIEREN]",
       "hoverCopyUrl": "Klicke hier um die URL zu kopieren",
-      "urlCopied": "URL in die Zwischenablage kopiert!"
+      "urlCopied": "URL in die Zwischenablage kopiert!",
+      "reply": {
+        "missingArgument": "Nutzung: /craftshot reply <Name> <Nachricht>",
+        "invalidId": "Ungültige Konversations-ID.",
+        "noConversation": "Keine aktive Konversation mit diesem Spieler.",
+        "success": "Nachricht erfolgreich gesendet!",
+        "failed": "Fehler beim Senden"
+      }
+    },
+    "chat": {
+      "hoverReply": "Klicken zum Antworten"
     }
   }
 }

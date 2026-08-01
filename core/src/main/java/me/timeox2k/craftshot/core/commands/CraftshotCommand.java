@@ -5,8 +5,12 @@ import com.google.gson.JsonObject;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import me.timeox2k.craftshot.core.CraftShotAddon;
+import me.timeox2k.craftshot.core.api.CraftShotAPIClient;
 import net.labymod.api.Laby;
 import net.labymod.api.client.chat.command.Command;
 import net.labymod.api.client.chat.command.SubCommand;
@@ -30,6 +34,7 @@ public class CraftshotCommand extends Command {
 
     this.translationKey("craftshot.command");
     this.withSubCommand(new CopySubcommand());
+    this.withSubCommand(new ReplySubcommand());
   }
 
   @Override
@@ -46,7 +51,6 @@ public class CraftshotCommand extends Command {
           Component.translatable(this.getTranslationKey("invalidFile"), NamedTextColor.RED)));
       return true;
     }
-
 
     String labyConnectToken = addon.getLabyConnectToken();
     if (labyConnectToken == null) {
@@ -79,8 +83,7 @@ public class CraftshotCommand extends Command {
 
     Request.ofGson(JsonElement.class)
         .url("https://" + this.addon.configuration().getDomain().get() + "/v1/upload")
-        .method(Method.POST).form(formData)
-        .handleErrorStream().async().execute((response) -> {
+        .method(Method.POST).form(formData).handleErrorStream().async().execute((response) -> {
           if (response.hasException()) {
             this.displayMessage(Component.empty().append(CraftShotAddon.prefix())
                 .append(Component.translatable(this.getTranslationKey("failed"), NamedTextColor.RED)));
@@ -113,7 +116,8 @@ public class CraftshotCommand extends Command {
             if (this.addon.configuration().openBrowserOnSuccess().get()) {
               String domain = this.addon.configuration().getDomain().get();
               String path = url.replaceFirst("https?://[^/]+", "");
-              Laby.references().chatExecutor().openUrl("https://" + domain + path + "?auth=" + labyConnectToken);
+              Laby.references().chatExecutor()
+                  .openUrl("https://" + domain + path + "?auth=" + labyConnectToken);
             }
           } catch (Exception e) {
             this.displayMessage(Component.empty().append(CraftShotAddon.prefix())
@@ -123,7 +127,6 @@ public class CraftshotCommand extends Command {
         });
     return true;
   }
-
 
 
   @Nullable
@@ -154,6 +157,48 @@ public class CraftshotCommand extends Command {
       Laby.labyAPI().minecraft().setClipboard(arguments[0]);
       this.displayMessage(Component.empty().append(CraftShotAddon.prefix()).append(
           Component.translatable(this.getTranslationKey("urlCopied"), NamedTextColor.GREEN)));
+      return true;
+    }
+  }
+
+  public static class ReplySubcommand extends SubCommand {
+    public static final Map<String, Long> activeConversations = new HashMap<>();
+
+    protected ReplySubcommand() {
+      super("msg");
+      this.translationKey("craftshot.command.msg");
+    }
+
+    @Override
+    public boolean execute(String prefix, String[] arguments) {
+      if (arguments.length < 2) {
+        this.displayMessage(Component.empty().append(CraftShotAddon.prefix()).append(
+            Component.translatable(this.getTranslationKey("missingArgument"), NamedTextColor.RED)));
+        return true;
+      }
+
+      String targetName = arguments[0].toLowerCase();
+      Long conversationId = activeConversations.get(targetName);
+
+      if (conversationId == null) {
+        this.displayMessage(Component.empty().append(CraftShotAddon.prefix()).append(
+            Component.translatable(this.getTranslationKey("noConversation"), NamedTextColor.RED)));
+        return true;
+      }
+
+      String content = String.join(" ", Arrays.copyOfRange(arguments, 1, arguments.length));
+
+      CraftShotAPIClient.sendMessage(conversationId, content).thenAccept(error -> {
+        Laby.labyAPI().minecraft().executeOnRenderThread(() -> {
+          if (error != null) {
+            Laby.labyAPI().minecraft().chatExecutor().displayClientMessage(
+                Component.empty().append(CraftShotAddon.prefix()).append(
+                        Component.translatable(this.getTranslationKey("failed"), NamedTextColor.RED))
+                    .append(Component.text(": " + error, NamedTextColor.RED)));
+          }
+        });
+      });
+
       return true;
     }
   }
