@@ -35,7 +35,7 @@
       "hoverText": "Click here to upload the screenshot"
     },
     "command": {
-      "missingArgument": "This command should not be run manually!",
+      "missingArgument": "Usage: /craftshot msg <Name> <Message> — message a mutual",
       "invalidFile": "The file does not exist!",
       "invalidSession": "You need to be logged into the LabyMod chat!",
       "uploading": "Uploading screenshot...",

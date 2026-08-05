@@ -6,7 +6,7 @@ plugins {
 val versions = providers.gradleProperty("net.labymod.minecraft-versions").get().split(";")
 
 group = "me.timeox2k"
-version = providers.environmentVariable("VERSION").getOrElse("1.0.7")
+version = providers.environmentVariable("VERSION").getOrElse("1.0.8")
 
 labyMod {
     defaultPackageName = "me.timeox2k.craftshot"

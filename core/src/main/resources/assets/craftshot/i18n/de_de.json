@@ -35,7 +35,7 @@
       "hoverText": "Klicke hier um den Screenshot hochzuladen"
     },
     "command": {
-      "missingArgument": "Dieser Command sollte nicht manuell ausgeführt werden!",
+      "missingArgument": "Nutzung: /craftshot msg <Name> <Nachricht> — schreibt einer Person, mit der du befreundet bist.",
       "invalidFile": "Die Datei existiert nicht!",
       "invalidSession": "Du musst in den LabyMod Chat eingeloggt sein!",
       "uploading": "Lade Screenshot hoch...",
