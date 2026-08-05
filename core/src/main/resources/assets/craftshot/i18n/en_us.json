@@ -45,9 +45,11 @@
       "hoverCopyUrl": "Click here to copy URL to clipboard",
       "urlCopied": "URL copied to clipboard!",
       "reply": {
-        "missingArgument": "Usage: /craftshot reply <Name> <message>",
+        "missingArgument": "Usage: /craftshot msg <Name> <Message>",
         "invalidId": "Invalid conversation ID.",
         "noConversation": "No active conversation with this player.",
+        "userNotFound": "Player not found.",
+        "notMutuals": "You can only message this player if you follow each other.",
         "success": "Message sent successfully!",
         "failed": "Failed to send message"
       }

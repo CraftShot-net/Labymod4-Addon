@@ -34,7 +34,7 @@ public class CraftshotCommand extends Command {
 
     this.translationKey("craftshot.command");
     this.withSubCommand(new CopySubcommand());
-    this.withSubCommand(new ReplySubcommand());
+    this.withSubCommand(new MSGSubcommand());
   }
 
   @Override
@@ -161,10 +161,10 @@ public class CraftshotCommand extends Command {
     }
   }
 
-  public static class ReplySubcommand extends SubCommand {
+  public static class MSGSubcommand extends SubCommand {
     public static final Map<String, Long> activeConversations = new HashMap<>();
 
-    protected ReplySubcommand() {
+    protected MSGSubcommand() {
       super("msg");
       this.translationKey("craftshot.command.msg");
     }
@@ -178,16 +178,36 @@ public class CraftshotCommand extends Command {
       }
 
       String targetName = arguments[0].toLowerCase();
+      String content = String.join(" ", Arrays.copyOfRange(arguments, 1, arguments.length));
+
       Long conversationId = activeConversations.get(targetName);
 
-      if (conversationId == null) {
-        this.displayMessage(Component.empty().append(CraftShotAddon.prefix()).append(
-            Component.translatable(this.getTranslationKey("noConversation"), NamedTextColor.RED)));
+      if (conversationId != null) {
+        this.sendToConversation(conversationId, content);
         return true;
       }
 
-      String content = String.join(" ", Arrays.copyOfRange(arguments, 1, arguments.length));
+      CraftShotAPIClient.getOrCreateConversation(targetName).thenAccept(result -> {
+        Laby.labyAPI().minecraft().executeOnRenderThread(() -> {
+          if (result.error() != null) {
+            Component errorText = "Not mutuals".equals(result.error())
+                ? Component.translatable(this.getTranslationKey("notMutuals"), NamedTextColor.RED)
+                : Component.translatable(this.getTranslationKey("userNotFound"), NamedTextColor.RED);
 
+            Laby.labyAPI().minecraft().chatExecutor().displayClientMessage(
+                Component.empty().append(CraftShotAddon.prefix()).append(errorText));
+            return;
+          }
+
+          activeConversations.put(targetName, result.conversationId());
+          this.sendToConversation(result.conversationId(), content);
+        });
+      });
+
+      return true;
+    }
+
+    private void sendToConversation(long conversationId, String content) {
       CraftShotAPIClient.sendMessage(conversationId, content).thenAccept(error -> {
         Laby.labyAPI().minecraft().executeOnRenderThread(() -> {
           if (error != null) {
@@ -198,8 +218,6 @@ public class CraftshotCommand extends Command {
           }
         });
       });
-
-      return true;
     }
   }
 }

@@ -44,10 +44,12 @@
       "copyUrl": "[URL KOPIEREN]",
       "hoverCopyUrl": "Klicke hier um die URL zu kopieren",
       "urlCopied": "URL in die Zwischenablage kopiert!",
-      "reply": {
-        "missingArgument": "Nutzung: /craftshot reply <Name> <Nachricht>",
+      "msg": {
+        "missingArgument": "Nutzung: /craftshot msg <Name> <Nachricht>",
         "invalidId": "Ungültige Konversations-ID.",
         "noConversation": "Keine aktive Konversation mit diesem Spieler.",
+        "userNotFound": "Spieler nicht gefunden.",
+        "notMutuals": "Du kannst diesem Spieler nur schreiben, wenn ihr euch gegenseitig folgt.",
         "success": "Nachricht erfolgreich gesendet!",
         "failed": "Fehler beim Senden"
       }

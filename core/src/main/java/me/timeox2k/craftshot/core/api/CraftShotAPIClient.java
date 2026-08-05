@@ -110,6 +110,107 @@ public class CraftShotAPIClient {
         });
   }
 
+  public record UserLookupDTO(UUID uuid, long userId) {}
+
+  public static CompletableFuture<UserLookupDTO> fetchUserLookup(String username) {
+    return CompletableFuture.supplyAsync(() -> {
+      try {
+        HttpRequest request = HttpRequest.newBuilder()
+            .uri(URI.create(UUID_BASE_URL + username))
+            .header("Accept", "application/json").GET().build();
+
+        HttpResponse<String> response = CLIENT.send(request, HttpResponse.BodyHandlers.ofString());
+
+        if (response.statusCode() == 200) {
+          JsonObject json = GSON.fromJson(response.body(), JsonObject.class);
+          if (json.has("id") && json.has("user_id")
+              && !json.get("id").isJsonNull() && !json.get("user_id").isJsonNull()) {
+            UUID uuid = parseUuid(json.get("id").getAsString());
+            long userId = json.get("user_id").getAsLong();
+            return new UserLookupDTO(uuid, userId);
+          }
+        }
+      } catch (Exception e) {
+        System.err.println("Error fetching user lookup for " + username + ": " + e.getMessage());
+      }
+      return null;
+    });
+  }
+
+  public record ConversationResult(Long conversationId, String error) {
+
+    public static ConversationResult success(long id) {
+      return new ConversationResult(id, null);
+    }
+
+    public static ConversationResult failure(String error) {
+      return new ConversationResult(null, error);
+    }
+  }
+
+  public static CompletableFuture<ConversationResult> getOrCreateConversation(String username) {
+    CachedConversations cached = CONVERSATION_CACHE;
+    if (cached != null) {
+      for (ConversationDTO convo : cached.conversations()) {
+        if (convo.name().equalsIgnoreCase(username)) {
+          return CompletableFuture.completedFuture(ConversationResult.success(convo.id()));
+        }
+      }
+    }
+
+    return fetchUserLookup(username).thenCompose(lookup -> {
+      if (lookup == null) {
+        return CompletableFuture.completedFuture(ConversationResult.failure("User not found"));
+      }
+
+      return CompletableFuture.supplyAsync(() -> {
+        try {
+          JsonObject payload = new JsonObject();
+          JsonArray userIds = new JsonArray();
+          userIds.add(lookup.userId());
+          payload.add("user_ids", userIds);
+
+          HttpRequest request = HttpRequest.newBuilder()
+              .uri(URI.create(BASE_URL + "/conversations/init"))
+              .header("Authorization", "Bearer " + getSessionToken())
+              .header("Content-Type", "application/json")
+              .header("Accept", "application/json")
+              .POST(HttpRequest.BodyPublishers.ofString(GSON.toJson(payload)))
+              .build();
+
+          HttpResponse<String> response = CLIENT.send(request, HttpResponse.BodyHandlers.ofString());
+
+          if (response.statusCode() == 200) {
+            JsonObject json = GSON.fromJson(response.body(), JsonObject.class);
+            if (json.has("redirect") && !json.get("redirect").isJsonNull()) {
+              String redirect = json.get("redirect").getAsString(); // "/messages/{id}"
+              String idPart = redirect.substring(redirect.lastIndexOf('/') + 1);
+              return ConversationResult.success(Long.parseLong(idPart));
+            }
+            return ConversationResult.failure("Unexpected response format");
+          }
+
+          if (response.statusCode() == 403) {
+            return ConversationResult.failure("Not mutuals");
+          }
+
+          try {
+            JsonObject json = GSON.fromJson(response.body(), JsonObject.class);
+            if (json.has("error") && !json.get("error").isJsonNull()) {
+              return ConversationResult.failure(json.get("error").getAsString());
+            }
+          } catch (Exception ignored) {
+          }
+
+          return ConversationResult.failure("HTTP " + response.statusCode());
+        } catch (Exception e) {
+          System.err.println("Error creating conversation with " + username + ": " + e.getMessage());
+          return ConversationResult.failure(e.getMessage());
+        }
+      });
+    });
+  }
+
   private static List<ConversationDTO> getConversationDTOS(JsonArray convosArray) {
     List<ConversationDTO> list = new ArrayList<>();
 

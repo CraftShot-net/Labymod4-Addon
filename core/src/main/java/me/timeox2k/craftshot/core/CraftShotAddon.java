@@ -5,7 +5,7 @@ import com.google.gson.JsonObject;
 import me.timeox2k.craftshot.core.api.CraftShotAPIClient;
 import me.timeox2k.craftshot.core.api.ReverbClient;
 import me.timeox2k.craftshot.core.commands.CraftshotCommand;
-import me.timeox2k.craftshot.core.commands.CraftshotCommand.ReplySubcommand;
+import me.timeox2k.craftshot.core.commands.CraftshotCommand.MSGSubcommand;
 import me.timeox2k.craftshot.core.hud.widgets.FollowerCountHudWidget;
 import me.timeox2k.craftshot.core.hud.widgets.UnreadNotificationCountHudWidget;
 import me.timeox2k.craftshot.core.listener.ScreenshotListener;
@@ -158,21 +158,28 @@ public class CraftShotAddon extends LabyAddon<CraftShotConfiguration> {
           Component messageComponent = Component.empty().append(CraftShotAddon.prefix());
 
           if (uuid != null) {
-            messageComponent = messageComponent.append(Component.icon(Icon.head(uuid)))
+            messageComponent = messageComponent.append(Component.icon(Icon.head(uuid), 8,8))
                 .append(Component.space());
           }
 
-          ReplySubcommand.activeConversations.put(senderName.toLowerCase(), convId);
+          MSGSubcommand.activeConversations.put(senderName.toLowerCase(), convId);
 
           Component nameComponent = Component.text(senderName, NamedTextColor.AQUA)
               .hoverEvent(HoverEvent.showText(
                   Component.translatable("craftshot.chat.hoverReply", NamedTextColor.YELLOW)))
-              .clickEvent(ClickEvent.suggestCommand("/craftshot reply " + senderName + " "));
+              .clickEvent(ClickEvent.suggestCommand("/craftshot msg " + senderName + " "));
 
           messageComponent = messageComponent
               .append(nameComponent)
-              .append(Component.text(" » ", NamedTextColor.DARK_GRAY))
-              .append(Component.text(content, NamedTextColor.WHITE));
+              .append(Component.text(" » ", NamedTextColor.DARK_GRAY));
+
+          String[] lines = content.split("\n", -1);
+          for (int i = 0; i < lines.length; i++) {
+            messageComponent = messageComponent.append(Component.text(lines[i], NamedTextColor.WHITE));
+            if (i < lines.length - 1) {
+              messageComponent = messageComponent.append(Component.newline());
+            }
+          }
 
           if (finalAttachmentUrl != null) {
             Icon attachmentIcon = Icon.url(finalAttachmentUrl);
@@ -182,7 +189,9 @@ public class CraftShotAddon extends LabyAddon<CraftShotConfiguration> {
                 .hoverEvent(HoverEvent.showText(
                     Component.text("Open Attachment", NamedTextColor.GRAY)));
 
-            messageComponent = messageComponent.append(imageComponent);
+            messageComponent = messageComponent
+                .append(Component.newline())
+                .append(imageComponent);
           }
 
           if (Laby.labyAPI().minecraft().chatExecutor() != null) {
