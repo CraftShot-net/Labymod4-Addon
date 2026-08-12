@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Map;
 import me.timeox2k.craftshot.core.CraftShotAddon;
 import me.timeox2k.craftshot.core.api.CraftShotAPIClient;
+import me.timeox2k.craftshot.core.utils.LabyUtils;
 import net.labymod.api.Laby;
 import net.labymod.api.client.chat.command.Command;
 import net.labymod.api.client.chat.command.SubCommand;
@@ -119,6 +120,9 @@ public class CraftshotCommand extends Command {
               Laby.references().chatExecutor()
                   .openUrl("https://" + domain + path + "?auth=" + labyConnectToken);
             }
+
+            LabyUtils.fetchLabyFriends();
+
           } catch (Exception e) {
             this.displayMessage(Component.empty().append(CraftShotAddon.prefix())
                 .append(Component.translatable(this.getTranslationKey("failed"), NamedTextColor.RED)));
