@@ -32,7 +32,9 @@
         "name": "Custom Domain (only set if you know what you are doing!)"
       },
       "purgeFriendshipSync": {
-        "name": "Purge Friendship Sync"
+        "name": "Purge Friendship Sync",
+        "text": "Purge",
+        "button": "Purge"
       }
     },
     "screenshot": {

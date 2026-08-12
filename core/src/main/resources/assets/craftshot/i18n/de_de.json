@@ -32,7 +32,9 @@
         "name": "Eigene Domain (nur setzen wenn du weißt was du tust!)"
       },
       "purgeFriendshipSync": {
-        "name": "Freunde-Sync leeren"
+        "name": "Freunde-Sync leeren",
+        "text": "Leeren",
+        "button": "Leeren"
       }
     },
     "screenshot": {
