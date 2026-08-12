@@ -336,4 +336,55 @@ public class CraftShotAPIClient {
     }
     throw new IllegalArgumentException("Invalid UUID Format: " + uuidString);
   }
+
+  public static CompletableFuture<Boolean> purgeFriendshipSync() {
+    return CompletableFuture.supplyAsync(() -> {
+      try {
+        HttpRequest request = HttpRequest.newBuilder()
+            .uri(URI.create("https://craftshot.net/api/v2/friends/purge"))
+            .header("Authorization", "Bearer " + getSessionToken())
+            .header("Accept", "application/json")
+            .POST(HttpRequest.BodyPublishers.noBody())
+            .build();
+
+        HttpResponse<String> response = CLIENT.send(request, HttpResponse.BodyHandlers.ofString());
+        return response.statusCode() >= 200 && response.statusCode() < 300;
+      } catch (Exception e) {
+        System.err.println("Error purging friendship sync: " + e.getMessage());
+        return false;
+      }
+    });
+  }
+
+  public record FriendDTO(UUID uuid, String username) {}
+
+  public static CompletableFuture<Boolean> syncFriends(List<FriendDTO> friends) {
+    return CompletableFuture.supplyAsync(() -> {
+      try {
+        JsonObject payload = new JsonObject();
+        JsonArray friendsArray = new JsonArray();
+        for (FriendDTO friend : friends) {
+          JsonObject friendObj = new JsonObject();
+          friendObj.addProperty("uuid", friend.uuid().toString());
+          friendObj.addProperty("username", friend.username());
+          friendsArray.add(friendObj);
+        }
+        payload.add("friends", friendsArray);
+
+        HttpRequest request = HttpRequest.newBuilder()
+            .uri(URI.create("https://craftshot.net/api/v2/friends/sync"))
+            .header("Authorization", "Bearer " + getSessionToken())
+            .header("Content-Type", "application/json")
+            .header("Accept", "application/json")
+            .POST(HttpRequest.BodyPublishers.ofString(GSON.toJson(payload)))
+            .build();
+
+        HttpResponse<String> response = CLIENT.send(request, HttpResponse.BodyHandlers.ofString());
+        return response.statusCode() >= 200 && response.statusCode() < 300;
+      } catch (Exception e) {
+        System.err.println("Error syncing friends: " + e.getMessage());
+        return false;
+      }
+    });
+  }
 }

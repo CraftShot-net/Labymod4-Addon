@@ -2,6 +2,7 @@ package me.timeox2k.craftshot.core.listener;
 
 import com.google.gson.JsonObject;
 import me.timeox2k.craftshot.core.CraftShotAddon;
+import me.timeox2k.craftshot.core.utils.LabyUtils;
 import net.labymod.api.client.network.server.ServerData;
 import net.labymod.api.event.Subscribe;
 import net.labymod.api.event.client.lifecycle.ShutdownEvent;
@@ -9,6 +10,8 @@ import net.labymod.api.event.client.network.server.ServerDisconnectEvent;
 import net.labymod.api.event.client.network.server.ServerJoinEvent;
 import net.labymod.api.event.client.network.server.ServerSwitchEvent;
 import net.labymod.api.event.client.session.SessionUpdateEvent;
+import net.labymod.api.event.labymod.labyconnect.session.friend.LabyConnectFriendAddEvent;
+import net.labymod.api.event.labymod.labyconnect.session.friend.LabyConnectFriendRemoveEvent;
 import net.labymod.api.util.concurrent.task.Task;
 
 import java.io.BufferedReader;
@@ -80,6 +83,18 @@ public class SocialEventsListener {
       this.currentServerIp = "Singleplayer";
       sendApiRequest("/v1/server/join", currentServerIp);
     }
+  }
+
+  @Subscribe
+  public void LabyConnectFriendAddEvent(LabyConnectFriendAddEvent event) {
+    System.out.println("Status changed!");
+    LabyUtils.fetchLabyFriends();
+  }
+
+  @Subscribe
+  public void LabyConnectFriendRemoveEvent(LabyConnectFriendRemoveEvent event) {
+    System.out.println("Status changed!");
+    LabyUtils.fetchLabyFriends();
   }
 
   private void sendApiRequest(String endpoint, String serverIp) {

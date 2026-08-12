@@ -22,11 +22,17 @@
       "enabled": {
         "name": "Aktiviert"
       },
+      "labyFriendsSync": {
+        "name": "Laby-Freunde Sync"
+      },
       "openBrowserOnSuccess": {
         "name": "Öffne Bild im Browser nach erfolgreichem Upload"
       },
       "domain": {
         "name": "Eigene Domain (nur setzen wenn du weißt was du tust!)"
+      },
+      "purgeFriendshipSync": {
+        "name": "Freunde-Sync leeren"
       }
     },
     "screenshot": {

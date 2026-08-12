@@ -11,6 +11,7 @@ import me.timeox2k.craftshot.core.hud.widgets.UnreadNotificationCountHudWidget;
 import me.timeox2k.craftshot.core.listener.ScreenshotListener;
 import me.timeox2k.craftshot.core.listener.SocialEventsListener;
 import me.timeox2k.craftshot.core.manager.AddonAPIProfileStatsManager;
+import me.timeox2k.craftshot.core.utils.LabyUtils;
 import me.timeox2k.craftshot.core.utils.SSLCertManager;
 import net.labymod.api.Laby;
 import net.labymod.api.addon.LabyAddon;
@@ -106,6 +107,10 @@ public class CraftShotAddon extends LabyAddon<CraftShotConfiguration> {
       lastKnownToken = token;
       if (CraftShotAPIClient.myDatabaseId != -1) {
         connectReverb();
+        Task.builder(LabyUtils::fetchLabyFriends)
+            .delay(3000, TimeUnit.MILLISECONDS)
+            .build()
+            .execute();
       }
     });
   }
